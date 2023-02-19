@@ -5,7 +5,7 @@
 let xp = 0;
 let health = 500;
 let currentWeapon = 0;
-let gold = 0;
+let gold = 50;
 let monsterHealth;
 let fighting;
 let inventory = ["stick"];
@@ -43,9 +43,32 @@ const locations = [
     },
     {
         name: "cave",
-        button_text: ["Buy Health(10 Gold)","Buy weapon(30 Gold)","Go to Town"],
-        "button functions": [buyHealth,buyWeapon,goTown],
+        button_text: ["Fight Slime","Fight Scribble","Get out of Cave"],
+        "button functions": [fightSlime,fightScribble,exitCave],
         text: "You are inside the store now, you see racks of potion, swords, daggers and many other weapons. What do you want to do?"
+    }
+]
+
+const weapons = [
+    {
+        name: "Stick",
+        power: 10
+    },
+    {
+        name: "Shovel",
+        power: 30
+    },
+    {
+        name: "Dagger",
+        power: 50
+    },
+    {
+        name: "Claw Hammer",
+        power: 80
+    },
+    {
+        name: "Sword of Exibus",
+        power: 150
     }
 ]
 
@@ -95,9 +118,38 @@ function fightDragon() {
 }
 
 function buyHealth() {
-
+    if(gold>=10){
+        gold-=10;
+        health+=10;
+        goldValue.innerText = gold;
+        healthValue.innerText = health;
+    }else{
+        text.innerText = "You don't have enough gold to buy health. Go earn some coins and visit again :)";
+    }
 }
 
 function buyWeapon() {
+    if(gold>=30){
+        gold-=30;
+        goldValue.innerText = gold;
+        currentWeapon++;
+        let newWeapon = weapons[currentWeapon].name;
+        text.innerText = "You now have a "+ newWeapon + ".";
+        inventory.push(newWeapon);
+        text.innerText += "In your inventory now you have " + inventory;
+    }else{
+        text.innerText = "You don't have enough gold to buy any weapon. Go earn some coins and visit again :)";
+    }
+}
 
+function fightSlime() {
+
+}
+
+function fightScribble() {
+    
+}
+
+function exitCave() {
+    
 }
