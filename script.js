@@ -27,7 +27,7 @@ const locations = [
         name: "backyard",
         button_text: ["Go to Town","Go to Cave","Sleep "],
         "button functions": [goTown,goCave,sleep],
-        text: "You are in the town square, you see a sign that says \"Store\""
+        text: "You are in your backyard, wanna take rest or continue adventure?"
     },
     {
         name: "town",
@@ -53,10 +53,6 @@ const weapons = [
     {
         name: "Stick",
         power: 10
-    },
-    {
-        name: "Shovel",
-        power: 30
     },
     {
         name: "Dagger",
@@ -109,20 +105,39 @@ function goCave() {
     update(locations[3]);
 }
 
+function exitCave() {
+    update(locations[0])
+}
+
 function sleep() {
-
+    if(health <= 450){
+        health+=50;
+        healthValue.innerText = health;
+        text.innerText="You have well slept and recovered your heath.";
+    }else{
+        health = 500;
+        healthValue.innerText = health;
+        text.innerText="You have well slept and recovered your heath.";
+    }
 }
 
-function fightDragon() {
-
-}
 
 function buyHealth() {
     if(gold>=10){
-        gold-=10;
-        health+=10;
-        goldValue.innerText = gold;
-        healthValue.innerText = health;
+        if(health<=490){
+            gold-=10;
+            health+=10;
+            goldValue.innerText = gold;
+            healthValue.innerText = health;
+            text.innerText = "you successfully bought 10 health :)";
+        }else{
+            let amount = 500-health;
+            gold -=amount;
+            goldValue.innerText = gold;
+            health = 500;
+            healthValue.innerText = health;
+            text.innerText = "you successfully bought " + amount + "health :)";
+        }
     }else{
         text.innerText = "You don't have enough gold to buy health. Go earn some coins and visit again :)";
     }
@@ -150,6 +165,6 @@ function fightScribble() {
     
 }
 
-function exitCave() {
-    
+function fightDragon() {
+
 }
