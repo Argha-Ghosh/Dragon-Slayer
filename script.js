@@ -89,9 +89,9 @@ const monsters = [
 
 //intializing buttons
 
-button1.onclick = goTown();
-button2.onclick = goCave();
-button3.onclick = sleep();
+button1.onclick = goTown;
+button2.onclick = goCave;
+button3.onclick = sleep;
 
 
 function update(location){
@@ -156,6 +156,8 @@ function buyHealth() {
             healthValue.innerText = health;
             text.innerText = "you successfully bought " + amount + " health :)";
         }else{
+            gold-=10;
+            goldValue.innerText = gold;
             maxHealth+=10;
             health = maxHealth;
             healthValue.innerText = health;
