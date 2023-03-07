@@ -8,8 +8,9 @@ let maxHealth = 100;
 let currentWeapon = 0;
 let gold = 50;
 let monsterHealth;
-let fighting;
+let fighting = 0;
 let inventory = ["stick"];
+let damage;
 
 //creating instances of HTML elements to maipulate them
 
@@ -23,32 +24,6 @@ const text = document.querySelector("#text");
 const monsterStats = document.querySelector("#monster-stats");
 const monsterHealthText = document.querySelector("#monster-health");
 const monsterNameText = document.querySelector("#monster-name");
-const locations = [
-    {
-        name: "backyard",
-        button_text: ["Go to Town","Go to Cave","Sleep "],
-        "button functions": [goTown,goCave,sleep],
-        text: "You are in your backyard, wanna take rest or continue adventure?"
-    },
-    {
-        name: "town",
-        button_text: ["Go to Store","Go to Cave","Fight Dragon"],
-        "button functions": [goStore,goCave,fightDragon],
-        text: "You are in the town square, you see a sign that says \"Store\""
-    },
-    {
-        name: "store",
-        button_text: ["Buy Health(10 Gold)","Buy weapon(30 Gold)","Go to Town"],
-        "button functions": [buyHealth,buyWeapon,goTown],
-        text: "You are inside the store now, you see racks of potion, swords, daggers and many other weapons. What do you want to do?"
-    },
-    {
-        name: "cave",
-        button_text: ["Fight Slime","Fight Scribble","Get out of Cave"],
-        "button functions": [fightSlime,fightScribble,exitCave],
-        text: "You are inside the store now, you see racks of potion, swords, daggers and many other weapons. What do you want to do?"
-    }
-];
 
 const weapons = [
     {
@@ -73,17 +48,50 @@ const monsters = [
     {
         name: "Slime",
         lvl: 2,
-        health: 15
+        health: 50
     },
     {
         name: "Scribble",
         lvl: 8,
-        health: 60
+        health: 150
     },
     {
         name: "Frost Dragon",
         lvl: 20,
-        health: 300
+        health: 500
+    }
+];
+
+const locations = [
+    {
+        name: "backyard",
+        button_text: ["Go to Town","Go to Cave","Sleep "],
+        "button functions": [goTown,goCave,sleep],
+        text: "You are in your backyard, wanna take rest or continue adventure?"
+    },
+    {
+        name: "town",
+        button_text: ["Go to Store","Go to Cave","Fight Dragon"],
+        "button functions": [goStore,goCave,fightDragon],
+        text: "You are in the town square, you see a sign that says \"Store\""
+    },
+    {
+        name: "store",
+        button_text: ["Buy Health(10 Gold)","Buy weapon(30 Gold)","Go to Town"],
+        "button functions": [buyHealth,buyWeapon,goTown],
+        text: "You are inside the store now, you see racks of potion, swords, daggers and many other weapons. What do you want to do?"
+    },
+    {
+        name: "cave",
+        button_text: ["Fight Slime","Fight Scribble","Get out of Cave"],
+        "button functions": [fightSlime,fightScribble,exitCave],
+        text: "You're inside the cave now. It's too silent and cold inside. You can't see that well but hear some noises..."
+    },
+    {
+        name: "toFight",
+        button_text: ["Attack","Dodge","Run"],
+        "button functions": [attack,dodge,exitCave],
+        text: "A " + monsters[fighting].name + " appeared!!!!"
     }
 ];
 
@@ -95,6 +103,8 @@ button3.onclick = sleep;
 
 
 function update(location){
+    monsterStats.style.display = "none";
+    
     button1.innerText = location.button_text[0];
     button2.innerText = location.button_text[1];
     button3.innerText = location.button_text[2];
@@ -104,7 +114,6 @@ function update(location){
     button3.onclick = location["button functions"][2];
 
     text.innerText=location.text;
-    console.log("you are in somewhere");
 }
 
 function goBackyard() {
@@ -218,5 +227,61 @@ function fightDragon() {
 }
 
 function goFight() {
+    update(locations[4]);
+    monsterHealth = monsters[fighting].health;
+    monsterHealthText.innerText = monsterHealth;
+    monsterNameText.innerText = monsters[fighting].name;
+    monsterStats.style.display = "block";
     
+
+}
+
+function attack(){
+    text.innerText = "the " + monsters[fighting].name + " attacks!";
+    text.innerText += "you attack the " + monsters[fighting].name + " with your " + weapons[currentWeapon].name + ".";
+
+    if(health >= monsters[fighting].lvl){
+        health -= monsters[fighting].lvl;
+    }else{
+        health = 0;
+    }
+
+    healthValue.innerText = health;
+    damage = weapons[currentWeapon].power + Math.floor(Math.random * xp) + 1;
+
+    if(monsterHealth >= damage){
+        monsterHealth -=damage;
+    }else{
+        monsterHealth = 0;
+    }
+    monsterHealthText.innerText = monsterHealth;
+
+    if(health == 0){
+        lose();
+    }else if(monsterHealth == 0){
+        (monsters[fighting]==monsters[2])? win():defeatMonster();
+    }
+}
+
+function dodge(){
+    text.innerText = "You dodge the attack from the " + monsters[fighting].name + ".";
+}
+
+function lose(){
+
+}
+
+function win(){
+
+}
+
+function defeatMonster(){
+    gold += Math.floor(monsters[fighting].lvl * 6.7);
+    xp+= monsters[fighting].lvl;
+
+    goldValue.innerText = gold;
+    xpValue.innerText = xp;
+
+    update(locations[3]);
+    text.innerText = "The monster screams \"Arg!\" as it dies. You gained experience points and gold. What do you want to do?";
 }

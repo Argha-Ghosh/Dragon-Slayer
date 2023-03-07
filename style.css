@@ -40,4 +40,5 @@ body{
 #monster-stats{
     display: none;
     background-color: red;
+    border: 1px black solid;
 }
