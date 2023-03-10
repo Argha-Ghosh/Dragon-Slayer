@@ -91,7 +91,13 @@ const locations = [
         name: "toFight",
         button_text: ["Attack","Dodge","Run"],
         "button functions": [attack,dodge,exitCave],
-        text: "A " + monsters[fighting].name + " appeared!!!!"
+        text: "A monster appeared!!!!"
+    },
+    {
+        name: "winGame",
+        button_text: ["Replay","Replay","Replay"],
+        "button functions": [replay,replay,replay],
+        text: "Congratulations! you've slayed the dragon and saved the town. Thanks for playing :)"
     }
 ];
 
@@ -232,12 +238,11 @@ function goFight() {
     monsterHealthText.innerText = monsterHealth;
     monsterNameText.innerText = monsters[fighting].name;
     monsterStats.style.display = "block";
-    
-
 }
 
 function attack(){
-    text.innerText = "the " + monsters[fighting].name + " attacks!";
+    text.innerText = "";
+    text.innerText += "the " + monsters[fighting].name + " attacks!";
     text.innerText += "you attack the " + monsters[fighting].name + " with your " + weapons[currentWeapon].name + ".";
 
     if(health >= monsters[fighting].lvl){
@@ -247,7 +252,8 @@ function attack(){
     }
 
     healthValue.innerText = health;
-    damage = weapons[currentWeapon].power + Math.floor(Math.random * xp) + 1;
+    damage = weapons[currentWeapon].power + Math.floor(Math.random() * xp ) + 1;
+    console.log(damage);
 
     if(monsterHealth >= damage){
         monsterHealth -=damage;
@@ -257,7 +263,7 @@ function attack(){
     monsterHealthText.innerText = monsterHealth;
 
     if(health == 0){
-        lose();
+        loose();
     }else if(monsterHealth == 0){
         (monsters[fighting]==monsters[2])? win():defeatMonster();
     }
@@ -267,12 +273,16 @@ function dodge(){
     text.innerText = "You dodge the attack from the " + monsters[fighting].name + ".";
 }
 
-function lose(){
-
+function loose(){
+    text.innerText = "You've been seriously injured by the monster, you escape from the cave...";
+    gold -= 10;
+    goldValue.innerHTML = gold;
+    button3.innerText = "Go Home";
+    button3.onclick = goHome;
 }
 
 function win(){
-
+    update(locations[5]);
 }
 
 function defeatMonster(){
@@ -284,4 +294,19 @@ function defeatMonster(){
 
     update(locations[3]);
     text.innerText = "The monster screams \"Arg!\" as it dies. You gained experience points and gold. What do you want to do?";
+}
+
+function replay(){
+    update(locations[0]);
+    text.innerText = "Welcome to Dragon Slayer. A huge frost dragon have been appeared in the town of Totalis. The people are terrified and the massive scream of the frost dragon is shaking the whole town. As chaos is spreading through the town someone need to slay the dragon to save the town of Totalis and it's people. Meanwhile you were training your sword at the back of your house. The dragon's scream is shaking your little hut, at that time a memory flashed back...Suddenly you feel a deep urge to go where the dragon is, what do you wanna do?";
+    gold = 50;
+    health = 100;
+    xp = 0;
+    goldValue.innerText = gold;
+    healthValue.innerText = health;
+    xpValue.innerText = xp;
+}
+
+function goHome(){
+    update(locations[0]);
 }
